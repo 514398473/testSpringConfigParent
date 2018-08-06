@@ -1,17 +1,32 @@
-server:
-  port: 8761
-
-eureka:
-  instance:
-    hostname: localhost
-  client:
-    registerWithEureka: false
-    fetchRegistry: false
-    serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
-#  server:
-#    enableSelfPreservation: false
-
 spring:
+  cloud:
+#kafka
+    bus:
+      enabled: true
+      trace:
+        enabled: true
+    stream:
+      kafka:
+        binder:
+          zk-nodes: 10.0.1.57:2181
+          brokers: 10.0.1.57:9092
+    config:
+      label: master
+      profile: dev
+#      uri: http://localhost:8888/
+      discovery:
+        enabled: true
+        serviceId : config-server
   application:
-    name: eurka-server
+    name: config-client
+server:
+  port: 8882
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8889/eureka/
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh
